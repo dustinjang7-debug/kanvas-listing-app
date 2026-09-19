@@ -63,12 +63,15 @@ def create_docx(data):
     return bio.getvalue()
 
 if uploaded_file:
+    # Step 1: Extract and display text preview on upload
+    extracted_text = extract_text(uploaded_file)
+    
+    with st.expander("🔍 Preview Extracted Input Text (Before Webhook)", expanded=True):
+        st.text_area("Parsed Text Payload", extracted_text, height=250)
+
     if st.button("🚀 Process Brief & Generate Listing", type="primary"):
-        with st.spinner("Extracting text and calling n8n workflow..."):
-            # Step 1: Extract text
-            extracted_text = extract_text(uploaded_file)
-            
-            # Step 2: Payload
+        with st.spinner("Calling n8n workflow..."):
+            # Step 2: Build Payload
             payload = {
                 "filename": uploaded_file.name,
                 "brief_text": extracted_text
